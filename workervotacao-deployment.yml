@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workervotacao
+spec:
+  selector:
+    matchLabels:
+      app: workervotacao
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: workervotacao
+    spec:
+      containers:
+      - name: workervotacao
+        image: renatogroffe/workervotacaokafka:1
+        env:
+        - name: ApacheKafka__Topic
+          value: votacao
+        - name: ApacheKafka__GroupId
+          value: workerk8s
+        - name: ApacheKafka__Broker
+          valueFrom:
+            secretKeyRef:
+              name: workervotacaosecret
+              key: ConnectionKafka
+        - name: ConnectionStrings__BaseVotacaoKafka
+          valueFrom:
+            secretKeyRef:
+              name: workervotacaosecret
+              key: ConnectionSqlServer

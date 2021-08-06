@@ -1,0 +1,19 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: workervotacao-scaledobject
+spec:
+  scaleTargetRef:
+    name: workervotacao
+  pollingInterval: 15
+  cooldownPeriod:  30
+  minReplicaCount: 0
+  maxReplicaCount: 10
+  triggers:
+  - type: kafka
+    metadata:
+      bootstrapServers: HOST
+      consumerGroup: workerk8s
+      topic: votacao
+      lagThreshold: '5'
+      offsetResetPolicy: earliest
